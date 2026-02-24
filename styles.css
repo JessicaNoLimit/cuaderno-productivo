@@ -1,0 +1,202 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Patrick Hand", Arial, sans-serif;
+}
+
+body {
+  letter-spacing: 0.2px;
+  background-image: url("assets/fondotareas.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* Main */
+main {
+  flex: 1;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Sección añadir tarea */
+.add-task {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Lista de tareas */
+.task-list h2 {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #f1f5f9;
+  border-radius: 5px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  font-size: 26px;
+  letter-spacing: 0.5px;
+  margin-bottom: 15px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+/* --- colores por bloque --- */
+.tareas h2 { color: #2563eb; }     /* azul */
+.memoria h2 { color: #d946ef; }    /* magenta */
+
+/* --- items de listas --- */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: rgba(241, 245, 249, 0.9);
+  border-left: 6px solid transparent;
+}
+
+/* azul libreta */
+.item-azul {
+  border-left-color: #3b82f6;
+}
+
+/* magenta */
+.item-magenta {
+  border-left-color: #d946ef;
+}
+
+/* boton estrella */
+.fav-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+.fav-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Favoritos estilo historial */
+.favoritos ul {
+  max-height: 350px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+/* Tamaño base general */
+body {
+  font-size: 20px;
+}
+
+/* Títulos principales */
+.card h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+/* Texto dentro de listas */
+.list-item {
+  font-size: 20px;
+}
+
+/* Inputs y textarea */
+input,
+textarea {
+  font-size: 18px;
+}
+
+/* Botones */
+button {
+  font-size: 18px;
+  padding: 8px 14px;
+}
+.fav-btn {
+  color: #f5b301;
+}

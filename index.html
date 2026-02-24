@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Tareas de Jesica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+  <main class="dashboard">
+
+  <section class="card tareas">
+    <h2>📝 Tareas</h2>
+    <input type="text" id="taskInput" placeholder="Escribe una tarea...">
+    <button id="addButton">Añadir</button>
+    <ul id="taskList"></ul>
+  </section>
+
+  <section class="card favoritos">
+    <h2>⭐ Favoritos</h2>
+    <p class="hint">Máx. 8 guardados</p>
+    <ul id="favoriteList"></ul>
+  </section>
+
+  <section class="card memoria">
+    <h2>🧠 Memoria & Sueños</h2>
+    <textarea id="memoryInput" placeholder="Escribe un pensamiento..."></textarea>
+    <button id="saveMemoryButton">Guardar en memoria</button>
+    <ul id="memoryList"></ul>
+  </section>
+
+</main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
