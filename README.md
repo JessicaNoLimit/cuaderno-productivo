@@ -27,7 +27,7 @@ JavaScript (lógica e interacción dinámica)
 
 🔗 Enlace de despliegue:
 
-*************
+https://jessicanolimit.github.io/cuaderno-productivo/
 
 📂 Estructura del proyecto
 cuaderno-productivo/
