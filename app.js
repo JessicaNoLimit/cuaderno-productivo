@@ -1,11 +1,15 @@
 // app.js
 
-// ---- elementos tareas ----
+// =============================
+// ELEMENTOS DEL DOM
+// =============================
+
+// ---- tareas ----
 const taskInput = document.getElementById("taskInput");
 const addButton = document.getElementById("addButton");
 const taskList = document.getElementById("taskList");
 
-// ---- elementos memoria ----
+// ---- memoria ----
 const memoryInput = document.getElementById("memoryInput");
 const saveMemoryButton = document.getElementById("saveMemoryButton");
 const memoryList = document.getElementById("memoryList");
@@ -14,116 +18,467 @@ const memoryList = document.getElementById("memoryList");
 const favoriteList = document.getElementById("favoriteList");
 const MAX_FAVORITOS = 8;
 
-// Genera una clave única para identificar el favorito (texto + color)
-function makeKey(texto, colorClase) {
-  return `${colorClase}__${texto}`; // simple y suficiente para el ejercicio
+// ---- extras tareas (deben existir en HTML) ----
+const taskCounter = document.getElementById("taskCounter");
+const clearCompletedButton = document.getElementById("clearCompletedButton");
+const showAllButton = document.getElementById("showAll");
+const showPendingButton = document.getElementById("showPending");
+const showCompletedButton = document.getElementById("showCompleted");
+
+// =============================
+// ESTADO DE LA APP
+// =============================
+
+let tasks = [];
+let memories = [];
+let currentFilter = "all";
+
+// =============================
+// LOCAL STORAGE
+// =============================
+
+function saveData() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("memories", JSON.stringify(memories));
+  localStorage.setItem("currentFilter", currentFilter);
 }
 
-// Busca un favorito existente por key
-function findFavoriteByKey(key) {
-  return favoriteList.querySelector(`[data-key="${CSS.escape(key)}"]`);
-}
+function loadData() {
+  const savedTasks = localStorage.getItem("tasks");
+  const savedMemories = localStorage.getItem("memories");
+  const savedFilter = localStorage.getItem("currentFilter");
 
-// Añadir a favoritos
-function addFavorite(texto, colorClase) {
-  const key = makeKey(texto, colorClase);
+  if (savedTasks) {
+    tasks = JSON.parse(savedTasks);
+  }
 
-  // Si ya existe, no duplicar
-  if (findFavoriteByKey(key)) return;
+  if (savedMemories) {
+    memories = JSON.parse(savedMemories);
+  }
 
-  const favItem = document.createElement("li");
-  favItem.className = `list-item ${colorClase}`;
-  favItem.dataset.key = key;
-  favItem.textContent = texto;
-
-  // Añadir arriba (historial)
-  favoriteList.prepend(favItem);
-
-  // Limitar a MAX_FAVORITOS
-  while (favoriteList.children.length > MAX_FAVORITOS) {
-    favoriteList.removeChild(favoriteList.lastElementChild);
+  if (savedFilter) {
+    currentFilter = savedFilter;
   }
 }
 
-// Eliminar de favoritos
-function removeFavorite(texto, colorClase) {
-  const key = makeKey(texto, colorClase);
-  const existing = findFavoriteByKey(key);
-  if (existing) existing.remove();
+// =============================
+// HELPERS
+// =============================
+
+function getCurrentTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
 }
 
-// Crear item (tarea o memoria) con estrella toggle
-function crearItem(texto, colorClase) {
-  const li = document.createElement("li");
-  li.className = `list-item ${colorClase}`;
+function makeKey(kind, id) {
+  return `${kind}__${id}`;
+}
 
-  const span = document.createElement("span");
-  span.textContent = texto;
+// =============================
+// TAREAS
+// =============================
 
-  const favBtn = document.createElement("button");
-  favBtn.className = "fav-btn";
-  favBtn.textContent = "☆"; // por defecto no favorito
-  favBtn.title = "Añadir/Quitar de favoritos";
-
-  const updateStar = () => {
-    const key = makeKey(texto, colorClase);
-    const exists = !!findFavoriteByKey(key);
-    favBtn.textContent = exists ? "★" : "☆";
+function addTask(text) {
+  const newTask = {
+    id: Date.now(),
+    text: text,
+    completed: false,
+    createdAt: getCurrentTime(),
+    isFavorite: false,
+    favoritedAt: null
   };
 
-  // Click estrella: toggle
-  favBtn.addEventListener("click", () => {
-    const key = makeKey(texto, colorClase);
-    const exists = !!findFavoriteByKey(key);
+  tasks.unshift(newTask);
+}
 
-    if (exists) {
-      removeFavorite(texto, colorClase);
-    } else {
-      addFavorite(texto, colorClase);
+function deleteTask(id) {
+  tasks = tasks.filter((task) => task.id !== id);
+}
+
+function toggleTask(id) {
+  tasks = tasks.map((task) =>
+    task.id === id
+      ? { ...task, completed: !task.completed }
+      : task
+  );
+}
+
+function clearCompletedTasks() {
+  tasks = tasks.filter((task) => !task.completed);
+}
+
+function getFilteredTasks() {
+  if (currentFilter === "pending") {
+    return tasks.filter((task) => !task.completed);
+  }
+
+  if (currentFilter === "completed") {
+    return tasks.filter((task) => task.completed);
+  }
+
+  return tasks;
+}
+
+function getPendingTasksCount() {
+  return tasks.filter((task) => !task.completed).length;
+}
+
+// =============================
+// MEMORIAS
+// =============================
+
+function addMemory(text) {
+  const newMemory = {
+    id: Date.now(),
+    text: text,
+    isFavorite: false,
+    favoritedAt: null
+  };
+
+  memories.unshift(newMemory);
+}
+
+function deleteMemory(id) {
+  memories = memories.filter((memory) => memory.id !== id);
+}
+
+// =============================
+// FAVORITOS
+// =============================
+
+function toggleFavorite(kind, id) {
+  if (kind === "task") {
+    tasks = tasks.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            isFavorite: !task.isFavorite,
+            favoritedAt: !task.isFavorite ? Date.now() : null
+          }
+        : task
+    );
+  }
+
+  if (kind === "memory") {
+    memories = memories.map((memory) =>
+      memory.id === id
+        ? {
+            ...memory,
+            isFavorite: !memory.isFavorite,
+            favoritedAt: !memory.isFavorite ? Date.now() : null
+          }
+        : memory
+    );
+  }
+}
+
+function getFavorites() {
+  const taskFavorites = tasks
+    .filter((task) => task.isFavorite)
+    .map((task) => ({
+      key: makeKey("task", task.id),
+      text: task.text,
+      colorClass: "item-azul",
+      favoritedAt: task.favoritedAt ?? 0
+    }));
+
+  const memoryFavorites = memories
+    .filter((memory) => memory.isFavorite)
+    .map((memory) => ({
+      key: makeKey("memory", memory.id),
+      text: memory.text,
+      colorClass: "item-magenta",
+      favoritedAt: memory.favoritedAt ?? 0
+    }));
+
+  return [...taskFavorites, ...memoryFavorites]
+    .sort((a, b) => b.favoritedAt - a.favoritedAt)
+    .slice(0, MAX_FAVORITOS);
+}
+
+// =============================
+// RENDER
+// =============================
+
+function renderTaskCounter() {
+  if (!taskCounter) return;
+  const pending = getPendingTasksCount();
+  taskCounter.textContent = `Tareas pendientes: ${pending}`;
+}
+
+function renderFilterButtons() {
+  if (!showAllButton || !showPendingButton || !showCompletedButton) return;
+
+  showAllButton.classList.toggle("active-filter", currentFilter === "all");
+  showPendingButton.classList.toggle("active-filter", currentFilter === "pending");
+  showCompletedButton.classList.toggle("active-filter", currentFilter === "completed");
+}
+
+function renderTasks() {
+  if (!taskList) return;
+
+  taskList.innerHTML = "";
+
+  const filteredTasks = getFilteredTasks();
+
+  filteredTasks.forEach((task) => {
+    const li = document.createElement("li");
+    li.className = `list-item item-azul`;
+
+    if (task.completed) {
+      li.classList.add("completed");
     }
 
-    updateStar();
+    const content = document.createElement("div");
+    content.className = "item-content";
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "item-text";
+    textSpan.textContent = task.text;
+
+    const timeSmall = document.createElement("small");
+    timeSmall.className = "item-time";
+    timeSmall.textContent = task.createdAt;
+
+    // Click en el texto para marcar/desmarcar completada
+    textSpan.addEventListener("click", () => {
+      toggleTask(task.id);
+      saveData();
+      renderAll();
+    });
+
+    content.appendChild(textSpan);
+    content.appendChild(timeSmall);
+
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
+
+    const completeBtn = document.createElement("button");
+    completeBtn.className = "complete-btn";
+    completeBtn.textContent = task.completed ? "↺" : "✓";
+    completeBtn.title = task.completed ? "Marcar como pendiente" : "Marcar como completada";
+
+    completeBtn.addEventListener("click", () => {
+      toggleTask(task.id);
+      saveData();
+      renderAll();
+    });
+
+    const favBtn = document.createElement("button");
+    favBtn.className = "fav-btn";
+    favBtn.textContent = task.isFavorite ? "★" : "☆";
+    favBtn.title = "Añadir/Quitar de favoritos";
+
+    favBtn.addEventListener("click", () => {
+      toggleFavorite("task", task.id);
+      saveData();
+      renderAll();
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "✕";
+    deleteBtn.title = "Eliminar tarea";
+
+    deleteBtn.addEventListener("click", () => {
+      deleteTask(task.id);
+      saveData();
+      renderAll();
+    });
+
+    actions.appendChild(completeBtn);
+    actions.appendChild(favBtn);
+    actions.appendChild(deleteBtn);
+
+    li.appendChild(content);
+    li.appendChild(actions);
+
+    taskList.appendChild(li);
   });
 
-  // Inicializa el estado de la estrella (por si ya existiera)
-  updateStar();
-
-  li.appendChild(span);
-  li.appendChild(favBtn);
-
-  return li;
+  renderTaskCounter();
+  renderFilterButtons();
 }
 
-// ---- acciones tareas ----
-function addTask() {
-  const text = taskInput.value.trim();
-  if (text === "") return;
+function renderMemories() {
+  if (!memoryList) return;
 
-  const item = crearItem(text, "item-azul");
-  taskList.prepend(item);
+  memoryList.innerHTML = "";
 
-  taskInput.value = "";
-  taskInput.focus();
+  memories.forEach((memory) => {
+    const li = document.createElement("li");
+    li.className = "list-item item-magenta";
+
+    const span = document.createElement("span");
+    span.className = "item-text";
+    span.textContent = memory.text;
+
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
+
+    const favBtn = document.createElement("button");
+    favBtn.className = "fav-btn";
+    favBtn.textContent = memory.isFavorite ? "★" : "☆";
+    favBtn.title = "Añadir/Quitar de favoritos";
+
+    favBtn.addEventListener("click", () => {
+      toggleFavorite("memory", memory.id);
+      saveData();
+      renderAll();
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "✕";
+    deleteBtn.title = "Eliminar memoria";
+
+    deleteBtn.addEventListener("click", () => {
+      deleteMemory(memory.id);
+      saveData();
+      renderAll();
+    });
+
+    actions.appendChild(favBtn);
+    actions.appendChild(deleteBtn);
+
+    li.appendChild(span);
+    li.appendChild(actions);
+
+    memoryList.appendChild(li);
+  });
 }
 
-addButton.addEventListener("click", addTask);
-taskInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addTask();
-});
+function renderFavorites() {
+  if (!favoriteList) return;
 
-// ---- acciones memoria ----
-function addMemory() {
-  const text = memoryInput.value.trim();
-  if (text === "") return;
+  favoriteList.innerHTML = "";
 
-  const item = crearItem(text, "item-magenta");
-  memoryList.prepend(item);
+  const favorites = getFavorites();
 
-  memoryInput.value = "";
-  memoryInput.focus();
+  favorites.forEach((fav) => {
+    const li = document.createElement("li");
+    li.className = `list-item ${fav.colorClass}`;
+    li.dataset.key = fav.key;
+    li.textContent = fav.text;
+    favoriteList.appendChild(li);
+  });
 }
 
-saveMemoryButton.addEventListener("click", addMemory);
-memoryInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) addMemory();
-});
+function renderAll() {
+  renderTasks();
+  renderMemories();
+  renderFavorites();
+}
+
+// =============================
+// EVENTOS
+// =============================
+
+// ---- añadir tarea ----
+if (addButton) {
+  addButton.addEventListener("click", () => {
+    const text = taskInput.value.trim();
+
+    if (text === "") return;
+
+    addTask(text);
+    saveData();
+    renderAll();
+
+    taskInput.value = "";
+    taskInput.focus();
+  });
+}
+
+if (taskInput) {
+  taskInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const text = taskInput.value.trim();
+
+      if (text === "") return;
+
+      addTask(text);
+      saveData();
+      renderAll();
+
+      taskInput.value = "";
+      taskInput.focus();
+    }
+  });
+}
+
+// ---- añadir memoria ----
+if (saveMemoryButton) {
+  saveMemoryButton.addEventListener("click", () => {
+    const text = memoryInput.value.trim();
+
+    if (text === "") return;
+
+    addMemory(text);
+    saveData();
+    renderAll();
+
+    memoryInput.value = "";
+    memoryInput.focus();
+  });
+}
+
+if (memoryInput) {
+  memoryInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      const text = memoryInput.value.trim();
+
+      if (text === "") return;
+
+      addMemory(text);
+      saveData();
+      renderAll();
+
+      memoryInput.value = "";
+      memoryInput.focus();
+    }
+  });
+}
+
+// ---- limpiar completadas ----
+if (clearCompletedButton) {
+  clearCompletedButton.addEventListener("click", () => {
+    clearCompletedTasks();
+    saveData();
+    renderAll();
+  });
+}
+
+// ---- filtros ----
+if (showAllButton) {
+  showAllButton.addEventListener("click", () => {
+    currentFilter = "all";
+    saveData();
+    renderAll();
+  });
+}
+
+if (showPendingButton) {
+  showPendingButton.addEventListener("click", () => {
+    currentFilter = "pending";
+    saveData();
+    renderAll();
+  });
+}
+
+if (showCompletedButton) {
+  showCompletedButton.addEventListener("click", () => {
+    currentFilter = "completed";
+    saveData();
+    renderAll();
+  });
+}
+
+// =============================
+// INICIO
+// =============================
+
+loadData();
+renderAll();

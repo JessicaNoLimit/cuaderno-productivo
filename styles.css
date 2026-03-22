@@ -1,22 +1,21 @@
-/* Reset básico */
+/* =========================
+   RESET BÁSICO
+========================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Patrick Hand", Arial, sans-serif;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
-html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+/* =========================
+   FONDO GENERAL
+========================= */
+html,
+body {
+  min-height: 100%;
   width: 100%;
-  background-image: url("assets/fondotareas.png");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 body {
@@ -24,50 +23,133 @@ body {
   color: #4a5568;
   min-height: 100vh;
   margin: 0;
+  padding: 24px;
+  font-size: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background-image: url("assets/fondotareas.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+main {
+  width: min(1200px, 100%);
+  margin: 0 auto;
   padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* =========================
+   GRID PRINCIPAL
+========================= */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-areas:
+    "tareas favoritos"
+    "memoria favoritos";
+  gap: 24px;
+  width: 100%;
+  align-items: start;
+}
+
+.tareas {
+  grid-area: tareas;
+}
+
+.memoria {
+  grid-area: memoria;
+  margin-top: -10px;
+}
+
+.favoritos {
+  grid-area: favoritos;
+  align-self: start;
+}
+
+/* =========================
+   TARJETAS
+========================= */
+.card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  border-radius: 22px;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   display: flex;
   flex-direction: column;
+  gap: 14px;
 }
 
-/* Main */
-main {
-  flex: 1;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card h2 {
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Colores títulos */
+.tareas h2 {
+  color: #3b82f6;
+}
+
+.memoria h2 {
+  color: #ec4899;
+}
+
+.favoritos h2 {
+  color: #f59e0b;
+}
+
+/* =========================
+   INPUTS Y TEXTAREA
+========================= */
+input[type="text"],
+textarea {
   width: 100%;
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 30px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Sección añadir tarea */
-.add-task {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-input[type="text"] {
-  flex: 1;
   padding: 12px 16px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #dbe4f0;
   border-radius: 12px;
   font-size: 18px;
   background: #ffffff;
   color: #4a5568;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+textarea:focus {
   outline: none;
   border-color: #a78bfa;
   box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
 }
 
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* =========================
+   BOTONES GENERALES
+========================= */
 button {
-  padding: 12px 20px;
+  padding: 12px 18px;
   border: none;
   background: linear-gradient(135deg, #a78bfa, #c084fc);
   color: white;
@@ -75,127 +157,168 @@ button {
   cursor: pointer;
   font-weight: 600;
   font-size: 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.25);
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(167, 139, 250, 0.4);
+  box-shadow: 0 6px 16px rgba(167, 139, 250, 0.35);
 }
 
-/* Lista de tareas */
-.task-list h2 {
-  margin-bottom: 15px;
-  color: #4a5568;
-  font-weight: 600;
+/* =========================
+   CONTROLES DE TAREAS
+========================= */
+.task-controls {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
 }
 
+.task-controls input {
+  flex: 1;
+}
+
+/* Contador */
+#taskCounter {
+  color: #64748b;
+  font-size: 18px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+/* =========================
+   FILTROS
+========================= */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filters button {
+  background: linear-gradient(135deg, #93c5fd, #60a5fa);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.25);
+}
+
+.filters button:hover {
+  box-shadow: 0 6px 16px rgba(96, 165, 250, 0.35);
+}
+
+.active-filter {
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* =========================
+   ACCIONES DE TAREAS
+========================= */
+.task-actions {
+  display: block;
+}
+
+#clearCompletedButton {
+  width: 100%;
+  background: linear-gradient(135deg, #fda4af, #fb7185);
+  box-shadow: 0 4px 12px rgba(251, 113, 133, 0.25);
+}
+
+#clearCompletedButton:hover {
+  box-shadow: 0 6px 16px rgba(251, 113, 133, 0.35);
+}
+
+/* =========================
+   LISTAS
+========================= */
 ul {
   list-style: none;
 }
 
-li {
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border-radius: 12px;
-  border: 1px solid rgba(254, 243, 199, 0.5);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  width: 100%;
-  max-width: 1000px;
-  margin: 80px auto;
-  padding: 20px;
-  align-items: start;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+#taskList,
+#favoriteList,
+#memoryList {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
+  gap: 10px;
 }
 
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15), 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card h2 {
-  font-size: 28px;
-  letter-spacing: 0.5px;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  resize: none;
-  font-size: 18px;
-  background: #ffffff;
-  color: #4a5568;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  flex-shrink: 0;
-}
-
-textarea:focus {
-  outline: none;
-  border-color: #a78bfa;
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
-}
-
-/* --- colores por bloque --- */
-.tareas h2 { color: #3b82f6; }     /* azul pastel */
-.memoria h2 { color: #ec4899; }    /* rosa pastel */
-
-/* --- items de listas --- */
+/* =========================
+   ITEMS GENERALES
+========================= */
 .list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 12px 16px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  background: rgba(241, 245, 249, 0.9);
+  border-radius: 14px;
+  background: rgba(241, 245, 249, 0.95);
   border-left: 6px solid transparent;
-  border: 1px solid rgba(241, 245, 249, 0.5);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: background 0.3s ease;
+  border: 1px solid rgba(241, 245, 249, 0.65);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  font-size: 18px;
 }
 
 .list-item:hover {
   background: rgba(241, 245, 249, 1);
 }
 
-/* azul libreta */
+/* Colores items */
 .item-azul {
   border-left-color: #3b82f6;
 }
 
-/* magenta */
 .item-magenta {
   border-left-color: #ec4899;
 }
 
-/* boton estrella */
+/* =========================
+   CONTENIDO INTERNO ITEM
+========================= */
+.item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.item-text {
+  word-break: break-word;
+  cursor: pointer;
+}
+
+.item-time {
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+/* Grupo de acciones */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* =========================
+   ESTADO COMPLETADO
+========================= */
+.completed {
+  opacity: 0.78;
+  background: rgba(226, 232, 240, 0.88);
+}
+
+.completed .item-text {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+/* =========================
+   BOTÓN FAVORITO
+========================= */
 .fav-btn {
   border: none;
   background: transparent;
@@ -204,57 +327,106 @@ textarea:focus {
   padding: 4px 6px;
   line-height: 1;
   color: #fbbf24;
-  transition: transform 0.2s ease, color 0.2s ease;
+  box-shadow: none;
 }
 
 .fav-btn:hover {
   transform: scale(1.1);
   color: #f59e0b;
+  background: transparent;
+  box-shadow: none;
 }
 
-/* Favoritos estilo historial */
-.favoritos ul {
-  max-height: 350px;
-  overflow: auto;
-  padding-right: 4px;
+/* =========================
+   BOTÓN COMPLETAR
+========================= */
+.complete-btn {
+  padding: 8px 10px;
+  min-width: 42px;
+  background: linear-gradient(135deg, #86efac, #4ade80);
+  color: #14532d;
+  box-shadow: 0 4px 10px rgba(74, 222, 128, 0.25);
 }
 
+.complete-btn:hover {
+  box-shadow: 0 6px 14px rgba(74, 222, 128, 0.35);
+}
+
+/* =========================
+   BOTÓN ELIMINAR
+========================= */
+.delete-btn {
+  padding: 8px 10px;
+  min-width: 42px;
+  background: linear-gradient(135deg, #fca5a5, #f87171);
+  color: #7f1d1d;
+  box-shadow: 0 4px 10px rgba(248, 113, 113, 0.25);
+}
+
+.delete-btn:hover {
+  box-shadow: 0 6px 14px rgba(248, 113, 113, 0.35);
+}
+
+/* =========================
+   FAVORITOS
+========================= */
 .hint {
   font-size: 14px;
   opacity: 0.8;
-  margin-bottom: 15px;
   color: #718096;
   font-style: italic;
 }
 
-/* Tamaño base general */
-body {
-  font-size: 20px;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 950px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .tareas,
+  .favoritos,
+  .memoria {
+    grid-column: auto;
+    grid-row: auto;
+  }
 }
 
-/* Títulos principales */
-.card h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-}
+@media (max-width: 768px) {
+  body {
+    padding: 14px;
+    background-position: center top;
+  }
 
-/* Texto dentro de listas */
-.list-item {
-  font-size: 18px;
-}
+  .card {
+    padding: 18px;
+  }
 
-/* Inputs y textarea */
-input,
-textarea {
-  font-size: 18px;
-}
+  .card h2 {
+    font-size: 25px;
+  }
 
-/* Botones */
-button {
-  font-size: 18px;
-  padding: 12px 20px;
-}
+  .task-controls {
+    flex-direction: column;
+  }
 
-.fav-btn {
-  color: #fbbf24;
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters button,
+  #clearCompletedButton,
+  .task-controls button,
+  .memoria button {
+    width: 100%;
+  }
+
+  .list-item {
+    align-items: flex-start;
+  }
+
+  .item-actions {
+    align-self: flex-end;
+  }
 }
