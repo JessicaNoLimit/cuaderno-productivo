@@ -11,32 +11,46 @@
 </head>
 <body>
 
-
   <main class="dashboard">
 
-  <section class="card tareas">
-    <h2>📝 Tareas</h2>
-    <input type="text" id="taskInput" placeholder="Escribe una tarea...">
-    <button id="addButton">Añadir</button>
-    <ul id="taskList"></ul>
-  </section>
+    <section class="card tareas">
+      <h2>📝 Tareas</h2>
 
-  <section class="card favoritos">
-    <h2>⭐ Favoritos</h2>
-    <p class="hint">Máx. 8 guardados</p>
-    <ul id="favoriteList"></ul>
-  </section>
+      <p id="taskCounter">Tareas pendientes: 0</p>
 
-  <section class="card memoria">
-    <h2>🧠 Memoria & Sueños</h2>
-    <textarea id="memoryInput" placeholder="Escribe un pensamiento..."></textarea>
-    <button id="saveMemoryButton">Guardar en memoria</button>
-    <ul id="memoryList"></ul>
-  </section>
+      <div class="task-controls">
+        <input type="text" id="taskInput" placeholder="Escribe una tarea...">
+        <button id="addButton">Añadir</button>
+      </div>
 
-</main>
+      <div class="filters">
+        <button id="showAll">Mostrar todas</button>
+        <button id="showPending">Solo pendientes</button>
+        <button id="showCompleted">Solo completadas</button>
+      </div>
+
+      <div class="task-actions">
+        <button id="clearCompletedButton">Limpiar completadas</button>
+      </div>
+
+      <ul id="taskList"></ul>
+    </section>
+
+    <section class="card favoritos">
+      <h2>⭐ Favoritos</h2>
+      <p class="hint">Máx. 8 guardados</p>
+      <ul id="favoriteList"></ul>
+    </section>
+
+    <section class="card memoria">
+      <h2>🧠 Memoria &amp; Sueños</h2>
+      <textarea id="memoryInput" placeholder="Escribe un pensamiento..."></textarea>
+      <button id="saveMemoryButton">Guardar en memoria</button>
+      <ul id="memoryList"></ul>
+    </section>
+
+  </main>
 
   <script src="app.js"></script>
-
 </body>
 </html>
