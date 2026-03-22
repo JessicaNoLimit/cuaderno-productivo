@@ -27,7 +27,7 @@ JavaScript (lógica e interacción dinámica)
 
 🔗 Enlace de despliegue:
 
-*************
+https://jessicanolimit.github.io/cuaderno-productivo/
 
 📂 Estructura del proyecto
 cuaderno-productivo/
@@ -63,3 +63,13 @@ Animaciones suaves
 Modo oscuro 🌙
 
 ✨ Creado como parte del proceso de aprendizaje en desarrollo web.
+
+## Mejora estética (CSS)
+
+Ejercicio del **Módulo 3** del Máster en Programación e Inteligencia Artificial de JobieFP.
+
+Se realizaron mejoras en el layout y en la estética del proyecto:
+
+- Ajuste del fondo responsive
+- Corrección de alineación entre cards
+- Mejora de espaciados y distribución visual
